@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getProductsFromId } from '../api';
 
+// const findProduct = productList.find(({ id }) => id === value);
+// console.log(findProduct);
+
 export default class Product extends Component {
   state = {
     productId: '',

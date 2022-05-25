@@ -13,6 +13,7 @@ export default class Home extends Component {
     productList: [],
     notFound: '',
     filterCategory: [],
+    carrinho: [],
   };
 
   componentDidMount() {
@@ -52,6 +53,19 @@ export default class Home extends Component {
     this.setState({ [name]: value });
   };
 
+  addToCart = (e) => {
+    // pegar o elemento clicado por um identificador
+    const { carrinho } = this.state;
+    const { value } = e.target;
+    this.setState((prevState) => ({ carrinho: [...prevState.carrinho, value] }),
+      () => localStorage.setItem('Shopping_cart_key', JSON.stringify(carrinho)));
+
+    // jogar esse elemento dentro do array carrinho
+    // passar esse array como props para a cass shoppingCart
+    // renderizalo la dentro
+    // e fazer um contador pelo tamanho do array
+  }
+
   render() {
     const {
       categorieList,
@@ -61,6 +75,7 @@ export default class Home extends Component {
       filterCategory } = this.state;
     return (
       <div>
+
         <nav>
           <Link to="/shopping-cart" data-testid="shopping-cart-button">
             <button type="button">Carrinho</button>
@@ -114,6 +129,16 @@ export default class Home extends Component {
               <Link to={ `/product/${id}` } data-testid="product-detail-link">
                 Detalhes
               </Link>
+              <br />
+              <button
+                type="button"
+                data-testid="product-add-to-cart"
+                onClick={ this.addToCart }
+                value={ id }
+              >
+                Adicionar ao carrinho
+
+              </button>
             </div>
           ))
         ) : (
@@ -129,6 +154,16 @@ export default class Home extends Component {
               <Link to={ `/product/${id}` } data-testid="product-detail-link">
                 Detalhes
               </Link>
+              <br />
+              <button
+                type="button"
+                data-testid="product-add-to-cart"
+                onClick={ this.addToCart }
+                value={ id }
+              >
+                Adicionar ao carrinho
+
+              </button>
             </div>
           ))
         ) : (
