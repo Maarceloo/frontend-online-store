@@ -13,6 +13,7 @@ export default class Home extends Component {
     productList: [],
     notFound: '',
     filterCategory: [],
+    carrinho: [],
   };
 
   componentDidMount() {
@@ -33,7 +34,6 @@ export default class Home extends Component {
     this.setState({
       filterCategory: product,
     });
-    // console.log(api);
   };
 
   handleInputClick = async () => {
@@ -44,13 +44,20 @@ export default class Home extends Component {
       productList: product,
       notFound: 'Nenhum produto foi encontrado',
     });
-    // console.log( this.state.productList );
   };
 
   handleOnChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
+
+  addToCart = (produto) => {
+    const { carrinho } = this.state;
+    // fazer todas as validações do carrinho , (some) se produto === carrinho
+    produto.qtt = 1;
+    this.setState((prevState) => ({ carrinho: [...prevState.carrinho, produto] }),
+      () => localStorage.setItem('Shopping_cart_key', JSON.stringify(carrinho)));
+  }
 
   render() {
     const {
@@ -61,6 +68,7 @@ export default class Home extends Component {
       filterCategory } = this.state;
     return (
       <div>
+
         <nav>
           <Link to="/shopping-cart" data-testid="shopping-cart-button">
             <button type="button">Carrinho</button>
@@ -106,14 +114,24 @@ export default class Home extends Component {
         </p>
 
         {productList.length > 0 ? (
-          productList.map(({ title, price, thumbnail, id }) => (
-            <div key={ id } data-testid="product">
-              <h3>{title}</h3>
-              <img src={ thumbnail } alt={ title } width="200" />
-              <p>{price}</p>
-              <Link to={ `/product/${id}` } data-testid="product-detail-link">
+          productList.map((item) => (
+            <div key={ item.id } data-testid="product">
+              <h3>{item.title}</h3>
+              <img src={ item.thumbnail } alt={ item.title } width="200" />
+              <p>{item.price}</p>
+              <Link to={ `/product/${item.id}` } data-testid="product-detail-link">
                 Detalhes
               </Link>
+              <br />
+              <button
+                type="button"
+                data-testid="product-add-to-cart"
+                onClick={ () => this.addToCart(item) }
+
+              >
+                Adicionar ao carrinho
+
+              </button>
             </div>
           ))
         ) : (
@@ -129,6 +147,16 @@ export default class Home extends Component {
               <Link to={ `/product/${id}` } data-testid="product-detail-link">
                 Detalhes
               </Link>
+              <br />
+              <button
+                type="button"
+                data-testid="product-add-to-cart"
+                onClick={ this.addToCart }
+                value={ id }
+              >
+                Adicionar ao carrinho
+
+              </button>
             </div>
           ))
         ) : (
