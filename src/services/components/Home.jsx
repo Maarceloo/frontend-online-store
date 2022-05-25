@@ -111,6 +111,9 @@ export default class Home extends Component {
               <h3>{title}</h3>
               <img src={ thumbnail } alt={ title } width="200" />
               <p>{price}</p>
+              <Link to={ `/product/${id}` } data-testid="product-detail-link">
+                Detalhes
+              </Link>
             </div>
           ))
         ) : (
@@ -118,11 +121,14 @@ export default class Home extends Component {
         )}
 
         {filterCategory.length > 0 ? (
-          filterCategory.map(({ title, price, thumbnail }) => (
+          filterCategory.map(({ title, price, thumbnail, id }) => (
             <div key={ title } data-testid="product">
               <h3>{title}</h3>
               <img src={ thumbnail } alt={ title } width="200" />
               <p>{price}</p>
+              <Link to={ `/product/${id}` } data-testid="product-detail-link">
+                Detalhes
+              </Link>
             </div>
           ))
         ) : (
