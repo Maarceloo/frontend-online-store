@@ -34,7 +34,6 @@ export default class Home extends Component {
     this.setState({
       filterCategory: product,
     });
-    // console.log(api);
   };
 
   handleInputClick = async () => {
@@ -45,7 +44,6 @@ export default class Home extends Component {
       productList: product,
       notFound: 'Nenhum produto foi encontrado',
     });
-    // console.log( this.state.productList );
   };
 
   handleOnChange = (e) => {
@@ -53,17 +51,12 @@ export default class Home extends Component {
     this.setState({ [name]: value });
   };
 
-  addToCart = (e) => {
-    // pegar o elemento clicado por um identificador
+  addToCart = (produto) => {
     const { carrinho } = this.state;
-    const { value } = e.target;
-    this.setState((prevState) => ({ carrinho: [...prevState.carrinho, value] }),
+    // fazer todas as validações do carrinho , (some) se produto === carrinho
+    produto.qtt = 1;
+    this.setState((prevState) => ({ carrinho: [...prevState.carrinho, produto] }),
       () => localStorage.setItem('Shopping_cart_key', JSON.stringify(carrinho)));
-
-    // jogar esse elemento dentro do array carrinho
-    // passar esse array como props para a cass shoppingCart
-    // renderizalo la dentro
-    // e fazer um contador pelo tamanho do array
   }
 
   render() {
@@ -121,20 +114,20 @@ export default class Home extends Component {
         </p>
 
         {productList.length > 0 ? (
-          productList.map(({ title, price, thumbnail, id }) => (
-            <div key={ id } data-testid="product">
-              <h3>{title}</h3>
-              <img src={ thumbnail } alt={ title } width="200" />
-              <p>{price}</p>
-              <Link to={ `/product/${id}` } data-testid="product-detail-link">
+          productList.map((item) => (
+            <div key={ item.id } data-testid="product">
+              <h3>{item.title}</h3>
+              <img src={ item.thumbnail } alt={ item.title } width="200" />
+              <p>{item.price}</p>
+              <Link to={ `/product/${item.id}` } data-testid="product-detail-link">
                 Detalhes
               </Link>
               <br />
               <button
                 type="button"
                 data-testid="product-add-to-cart"
-                onClick={ this.addToCart }
-                value={ id }
+                onClick={ () => this.addToCart(item) }
+
               >
                 Adicionar ao carrinho
 
