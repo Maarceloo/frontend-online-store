@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class ShoppingCart extends Component {
   state = {
-    carrinho: [], // recebe localStorage
+    carrinho: [],
   }
 
   componentDidMount() {
