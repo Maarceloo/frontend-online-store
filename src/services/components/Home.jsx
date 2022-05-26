@@ -13,7 +13,6 @@ export default class Home extends Component {
     productList: [],
     notFound: '',
     filterCategory: [],
-    carrinho: [],
   };
 
   componentDidMount() {
@@ -28,7 +27,6 @@ export default class Home extends Component {
   };
 
   handleRadio = async ({ target: { value } }) => {
-    console.log(value);
     const api = await getProductsFromCategory(value);
     const product = api.results;
     this.setState({
@@ -52,12 +50,22 @@ export default class Home extends Component {
   };
 
   addToCart = (produto) => {
-    const { carrinho } = this.state;
-    // fazer todas as validações do carrinho , (some) se produto === carrinho
-    produto.qtt = 1;
-    this.setState((prevState) => ({ carrinho: [...prevState.carrinho, produto] }),
-      () => localStorage.setItem('Shopping_cart_key', JSON.stringify(carrinho)));
-  }
+    const carrinho = JSON.parse(localStorage.getItem('Shopping_cart_key'));
+    if (!carrinho) {
+      produto.qtt = 1;
+      return localStorage.setItem('Shopping_cart_key', JSON.stringify([produto]));
+    }
+    if (carrinho.some((item) => produto.id === item.id)) {
+      const index = carrinho.findIndex((items) => produto.id === items.id);
+      carrinho[index].qtt += 1;
+      return localStorage.setItem('Shopping_cart_key', JSON.stringify([...carrinho]));
+    }
+    if (carrinho.length > 0) {
+      produto.qtt = 1;
+      return localStorage.setItem('Shopping_cart_key',
+        JSON.stringify([...carrinho, produto]));
+    }
+  };
 
   render() {
     const {
@@ -68,7 +76,6 @@ export default class Home extends Component {
       filterCategory } = this.state;
     return (
       <div>
-
         <nav>
           <Link to="/shopping-cart" data-testid="shopping-cart-button">
             <button type="button">Carrinho</button>
@@ -119,7 +126,10 @@ export default class Home extends Component {
               <h3>{item.title}</h3>
               <img src={ item.thumbnail } alt={ item.title } width="200" />
               <p>{item.price}</p>
-              <Link to={ `/product/${item.id}` } data-testid="product-detail-link">
+              <Link
+                to={ `/product/${item.id}` }
+                data-testid="product-detail-link"
+              >
                 Detalhes
               </Link>
               <br />
@@ -127,10 +137,8 @@ export default class Home extends Component {
                 type="button"
                 data-testid="product-add-to-cart"
                 onClick={ () => this.addToCart(item) }
-
               >
                 Adicionar ao carrinho
-
               </button>
             </div>
           ))
@@ -139,23 +147,24 @@ export default class Home extends Component {
         )}
 
         {filterCategory.length > 0 ? (
-          filterCategory.map(({ title, price, thumbnail, id }) => (
-            <div key={ title } data-testid="product">
-              <h3>{title}</h3>
-              <img src={ thumbnail } alt={ title } width="200" />
-              <p>{price}</p>
-              <Link to={ `/product/${id}` } data-testid="product-detail-link">
+          filterCategory.map((item) => (
+            <div key={ item.title } data-testid="product">
+              <h3>{item.title}</h3>
+              <img src={ item.thumbnail } alt={ item.title } width="200" />
+              <p>{item.price}</p>
+              <Link
+                to={ `/product/${item.id}` }
+                data-testid="product-detail-link"
+              >
                 Detalhes
               </Link>
               <br />
               <button
                 type="button"
                 data-testid="product-add-to-cart"
-                onClick={ this.addToCart }
-                value={ id }
+                onClick={ () => this.addToCart(item) }
               >
                 Adicionar ao carrinho
-
               </button>
             </div>
           ))
