@@ -77,8 +77,8 @@ export default class Home extends Component {
     return (
       <div>
         <nav>
-          <Link to="/shopping-cart" data-testid="shopping-cart-button">
-            <button type="button">Carrinho</button>
+          <Link to="/shopping-cart">
+            <button data-testid="shopping-cart-button" type="button">Carrinho</button>
           </Link>
         </nav>
         <input
@@ -148,9 +148,9 @@ export default class Home extends Component {
 
         {filterCategory.length > 0 ? (
           filterCategory.map((item) => (
-            <div key={ item.title } data-testid="product">
+            <div key={ item.id } data-testid="product">
               <h3>{item.title}</h3>
-              <img src={ item.thumbnail } alt={ item.title } width="200" />
+              <img src={ item.thumbnail } alt={ item.id } width="200" />
               <p>{item.price}</p>
               <Link
                 to={ `/product/${item.id}` }
