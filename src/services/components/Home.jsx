@@ -13,10 +13,29 @@ export default class Home extends Component {
     productList: [],
     notFound: '',
     filterCategory: [],
+    quantidade: 0,
   };
 
   componentDidMount() {
     this.getCategoriesApi();
+
+    this.QuantityCart();
+  }
+
+  QuantityCart = () => {
+    const shoppingCart = JSON.parse(localStorage.getItem('Shopping_cart_key'));
+    const ten = 10;
+    if (shoppingCart) {
+      let result = 0;
+      shoppingCart.map((number) => {
+        result += parseInt(number.qtt, ten);
+        return result;
+      });
+      console.log(result);
+      this.setState({
+        quantidade: result,
+      });
+    }
   }
 
   getCategoriesApi = async () => {
@@ -51,19 +70,22 @@ export default class Home extends Component {
 
   addToCart = (produto) => {
     const carrinho = JSON.parse(localStorage.getItem('Shopping_cart_key'));
+    if (carrinho) {
+      if (carrinho.some((item) => produto.id === item.id)) {
+        const index = carrinho.findIndex((items) => produto.id === items.id);
+        carrinho[index].qtt += 1;
+        localStorage.setItem('Shopping_cart_key', JSON.stringify([...carrinho]));
+        return this.QuantityCart();
+      }
+      produto.qtt = 1;
+      localStorage.setItem('Shopping_cart_key',
+        JSON.stringify([...carrinho, produto]));
+      return this.QuantityCart();
+    }
     if (!carrinho) {
       produto.qtt = 1;
-      return localStorage.setItem('Shopping_cart_key', JSON.stringify([produto]));
-    }
-    if (carrinho.some((item) => produto.id === item.id)) {
-      const index = carrinho.findIndex((items) => produto.id === items.id);
-      carrinho[index].qtt += 1;
-      return localStorage.setItem('Shopping_cart_key', JSON.stringify([...carrinho]));
-    }
-    if (carrinho.length > 0) {
-      produto.qtt = 1;
-      return localStorage.setItem('Shopping_cart_key',
-        JSON.stringify([...carrinho, produto]));
+      localStorage.setItem('Shopping_cart_key', JSON.stringify([produto]));
+      return this.QuantityCart();
     }
   };
 
@@ -73,12 +95,19 @@ export default class Home extends Component {
       inputName,
       productList,
       notFound,
-      filterCategory } = this.state;
+      filterCategory,
+      quantidade } = this.state;
     return (
       <div>
         <nav>
           <Link to="/shopping-cart">
-            <button data-testid="shopping-cart-button" type="button">Carrinho</button>
+            <button
+              data-testid="shopping-cart-button"
+              type="button"
+            >
+              Carrinho
+              <p data-testid="shopping-cart-size">{ quantidade }</p>
+            </button>
           </Link>
         </nav>
         <input
