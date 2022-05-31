@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TesteCarrinho extends Component {
+class ComponetCart extends Component {
   state = {
     carrinho: [],
   }
@@ -73,4 +73,4 @@ class TesteCarrinho extends Component {
   }
 }
 
-export default TesteCarrinho;
+export default ComponetCart;

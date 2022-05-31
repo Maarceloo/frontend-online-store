@@ -4,7 +4,7 @@ import {
   getCategories,
   getProductsFromCategoryAndQuery,
   getProductsFromCategory,
-} from '../api';
+} from '../services/api';
 
 export default class Home extends Component {
   state = {
