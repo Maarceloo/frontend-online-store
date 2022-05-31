@@ -18,7 +18,9 @@ class ComponetCart extends Component {
 
   somaQtt = (index) => {
     const item = JSON.parse(localStorage.getItem('Shopping_cart_key'));
-    item[index].qtt += 1;
+
+    if (item[index].qtt < item[index].available_quantity) { item[index].qtt += 1; }
+    // console.log(item[index].available_quantity);
     localStorage.setItem('Shopping_cart_key', JSON.stringify(item));
     this.getLocalStorage();
   };
