@@ -16,11 +16,13 @@ export default class Product extends Component {
 
   componentDidMount = () => {
     this.QuantityCart();
-    this.getLocalStorage();
     const getId = this.getProductId();
     this.setState({
       productId: getId,
-    }, () => this.getApi());
+    }, async () => {
+      await this.getApi();
+      this.getLocalStorage();
+    });
   }
 
   QuantityCart = () => {
