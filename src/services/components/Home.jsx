@@ -181,6 +181,9 @@ export default class Home extends Component {
               <h3>{item.title}</h3>
               <img src={ item.thumbnail } alt={ item.id } width="200" />
               <p>{item.price}</p>
+              {item.shipping.free_shipping
+              && <p data-testid="free-shipping">Frete Grátis</p>}
+
               <Link
                 to={ `/product/${item.id}` }
                 data-testid="product-detail-link"
