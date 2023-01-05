@@ -31,7 +31,6 @@ export default class Home extends Component {
         result += parseInt(number.qtt, ten);
         return result;
       });
-      console.log(result);
       this.setState({
         quantidade: result,
       });
