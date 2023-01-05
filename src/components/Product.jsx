@@ -91,7 +91,6 @@ export default class Product extends Component {
     if (getObj.length > 0) {
       return localStorage.setItem('Coment_key', JSON.stringify([...getObj, obj]));
     }
-    // this.setState((prevState) => ({ ...prevState, email: '', descricao: '', rate: '' }));
   }
 
   handleClick = () => {
